@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post-it Flight</title>
+    <title>Infinity Love Flight</title>
     <style>
         body {
             margin: 0;
-            background: #2c3e50;
+            background: #2d3436;
             overflow: hidden;
             display: flex;
             justify-content: center;
@@ -26,7 +26,7 @@
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #ffeb3b;
+            background: #fab1a0;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
             transform: rotate(-2deg);
         }
@@ -35,43 +35,60 @@
             position: absolute;
             width: 200px;
             height: 200px;
-            background: #fff176;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            background: #ff7675; /* Rose Pink */
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-weight: bold;
             font-size: 24px;
-            color: #555;
-            transition: all 0.5s ease;
+            color: white;
             z-index: 10;
             user-select: none;
+            text-align: center;
+            transition: background 0.5s;
         }
 
-        @keyframes paperToPlane {
-            0% { transform: scale(1) rotate(0deg); clip-path: inset(0); }
-            20% { 
-                transform: scale(0.9) rotateX(30deg) translateY(-20px);
-                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
-            }
-            40% { 
-                transform: scale(0.7) rotateY(45deg);
-                clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-            }
-            60% { 
-                transform: scale(0.3) rotateZ(10deg);
+        /* Figure-8 Infinity Loop Animation */
+        @keyframes figureEight {
+            0% { 
+                /* Starting position as a small plane */
+                transform: translate(0, 0) rotate(0deg) scale(0.2);
                 clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%);
             }
+            25% { 
+                /* Top right loop */
+                transform: translate(150px, -100px) rotate(45deg) scale(0.2);
+            }
+            50% { 
+                /* Center cross */
+                transform: translate(0, 0) rotate(180deg) scale(0.2);
+            }
+            75% { 
+                /* Bottom left loop */
+                transform: translate(-150px, 100px) rotate(225deg) scale(0.2);
+            }
             100% { 
-                transform: scale(0.1) translate(1500px, -1200px) rotate(720deg);
-                opacity: 0;
+                /* Back to center */
+                transform: translate(0, 0) rotate(360deg) scale(0.2);
             }
         }
 
-        .animate-flight {
-            animation: paperToPlane 4s forwards cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        /* Initial Fold Animation */
+        @keyframes initialFold {
+            0% { transform: scale(1); clip-path: inset(0); }
+            100% { transform: scale(0.2); clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%); }
+        }
+
+        .fold-only {
+            animation: initialFold 1.5s forwards ease-in-out;
+        }
+
+        .infinity-flight {
+            /* This starts after the fold and loops forever */
+            animation: figureEight 6s infinite linear;
             pointer-events: none;
         }
     </style>
@@ -79,23 +96,39 @@
 <body>
 
     <div class="stack">
-        <div class="note-back" style="transform: rotate(3deg); background: #fdd835;"></div>
+        <div class="note-back" style="transform: rotate(3deg); background: #e17055;"></div>
         <div class="note-back"></div>
         <div id="topNote" class="note-top">Tap Me</div>
     </div>
 
     <script>
         const note = document.getElementById('topNote');
-        
-        const launch = (e) => {
-            e.preventDefault(); // Prevents zooming on mobile
-            note.innerText = ""; 
-            note.classList.add('animate-flight');
+        let tapped = false;
+
+        const startSequence = (e) => {
+            if (tapped) return;
+            tapped = true;
+            if(e) e.preventDefault();
+
+            // 1. Change text to "I Love You"
+            note.innerText = "I Love You";
+            note.style.fontSize = "30px";
+
+            // 2. Wait a heartbeat, then fold
+            setTimeout(() => {
+                note.innerText = "";
+                note.classList.add('fold-only');
+                
+                // 3. Once folded, start the infinite figure-8
+                setTimeout(() => {
+                    note.classList.remove('fold-only');
+                    note.classList.add('infinity-flight');
+                }, 1500);
+            }, 1000);
         };
 
-        // Listen for both mouse clicks and finger touches
-        note.addEventListener('click', launch);
-        note.addEventListener('touchstart', launch, {passive: false});
+        note.addEventListener('click', startSequence);
+        note.addEventListener('touchstart', startSequence, {passive: false});
     </script>
 </body>
 </html>
