@@ -1,13 +1,100 @@
-### ⚡ A Token of Gratitude ⚡
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-it Flight</title>
+    <style>
+        body {
+            margin: 0;
+            background: #2c3e50;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-I wanted to send a little something bespoke to say thanks for that incredible dinner.
+        .stack {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
 
-**The Instructions:**
-1. Open the link below on your phone.
-2. You’ll see a walnut-framed box holding a memory of our meal.
-3. Tap the **"Release Gratitude"** button.
+        .note-back {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: #ffeb3b;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transform: rotate(-2deg);
+        }
 
-[ Link to your hosted HTML file here ]
+        .note-top {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: #fff176;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            font-weight: bold;
+            transition: all 0.5s ease;
+            z-index: 10;
+            user-select: none;
+        }
 
-*“Wait specifically for the bright light to shine.”*
-— **BHP**
+        @keyframes paperToPlane {
+            0% { transform: scale(1) rotate(0deg); clip-path: inset(0); }
+            20% { 
+                transform: scale(0.9) rotateX(30deg) translateY(-20px);
+                clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            }
+            40% { 
+                transform: scale(0.7) rotateY(45deg);
+                clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            }
+            60% { 
+                transform: scale(0.3) rotateZ(10deg);
+                clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%);
+            }
+            70% { 
+                transform: scale(0.15) translate(0, 0);
+                opacity: 1;
+            }
+            100% { 
+                transform: scale(0.1) translate(1500px, -800px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .animate-flight {
+            animation: paperToPlane 5s forwards ease-in-out;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stack">
+        <div class="note-back" style="transform: rotate(3deg); background: #fdd835;"></div>
+        <div class="note-back"></div>
+        <div id="topNote" class="note-top">Tap Me</div>
+    </div>
+
+    <script>
+        const note = document.getElementById('topNote');
+        // This makes it work for both finger taps and mouse clicks
+        const startFlight = () => {
+            note.innerText = ""; 
+            note.classList.add('animate-flight');
+        };
+
+        note.addEventListener('click', startFlight);
+        note.addEventListener('touchstart', startFlight);
+    </script>
+</body>
+</html>
