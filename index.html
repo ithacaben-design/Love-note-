@@ -13,6 +13,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            touch-action: manipulation;
         }
 
         .stack {
@@ -42,6 +43,8 @@
             align-items: center;
             font-family: sans-serif;
             font-weight: bold;
+            font-size: 24px;
+            color: #555;
             transition: all 0.5s ease;
             z-index: 10;
             user-select: none;
@@ -61,18 +64,14 @@
                 transform: scale(0.3) rotateZ(10deg);
                 clip-path: polygon(50% 0%, 0% 100%, 50% 80%, 100% 100%);
             }
-            70% { 
-                transform: scale(0.15) translate(0, 0);
-                opacity: 1;
-            }
             100% { 
-                transform: scale(0.1) translate(1500px, -800px) rotate(720deg);
+                transform: scale(0.1) translate(1500px, -1200px) rotate(720deg);
                 opacity: 0;
             }
         }
 
         .animate-flight {
-            animation: paperToPlane 5s forwards ease-in-out;
+            animation: paperToPlane 4s forwards cubic-bezier(0.45, 0.05, 0.55, 0.95);
             pointer-events: none;
         }
     </style>
@@ -87,14 +86,16 @@
 
     <script>
         const note = document.getElementById('topNote');
-        // This makes it work for both finger taps and mouse clicks
-        const startFlight = () => {
+        
+        const launch = (e) => {
+            e.preventDefault(); // Prevents zooming on mobile
             note.innerText = ""; 
             note.classList.add('animate-flight');
         };
 
-        note.addEventListener('click', startFlight);
-        note.addEventListener('touchstart', startFlight);
+        // Listen for both mouse clicks and finger touches
+        note.addEventListener('click', launch);
+        note.addEventListener('touchstart', launch, {passive: false});
     </script>
 </body>
 </html>
